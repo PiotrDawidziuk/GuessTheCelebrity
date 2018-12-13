@@ -7,6 +7,8 @@ import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -25,10 +27,15 @@ public class MainActivity extends AppCompatActivity {
     int chosenCeleb = 0;
     String[] answers = new String[4];
     int locationOfCorrectAnswer = 0;
-
-
     ImageView imageView;
+    Button button0;
+    Button button1;
+    Button button2;
+    Button button3;
 
+    public void celebChosen (View view){
+
+    }
 
     public class  ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
@@ -66,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             String result = "";
             URL url;
             HttpURLConnection urlConnection = null;
-            imageView = findViewById(R.id.imageView);
 
             try {
 
@@ -103,6 +109,13 @@ public class MainActivity extends AppCompatActivity {
 
         DownloadTask task = new DownloadTask();
         String result = null;
+        imageView = findViewById(R.id.imageView);
+
+        button0 = findViewById(R.id.button0);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+
 
         try {
 
@@ -153,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
                     answers[i] = celebNames.get(incorrectAnswerLocation);
                 }
             }
+
+            button0.setText(answers[0]);
+            button1.setText(answers[1]);
+            button2.setText(answers[2]);
+            button3.setText(answers[3]);
         } catch (Exception e) {
             e.printStackTrace();
         }
