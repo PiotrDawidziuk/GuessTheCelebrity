@@ -1,5 +1,7 @@
 package pl.apka.guessthecelebrity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +12,42 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<String> celebURLs = new ArrayList<String>();
+    ArrayList<String> celebNames = new ArrayList<String>();
+
+    public class  ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+
+            try {
+
+                URL url = new URL(urls[0]);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+
+                Bitmap bitmap = new BitmapFactory().decodeStream(inputStream);
+
+                return bitmap;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                return null;
+
+            }   
+        }
+    }
+
 
     public class DownloadTask extends AsyncTask<String,Void, String> {
 
@@ -62,7 +98,23 @@ public class MainActivity extends AppCompatActivity {
 
             result = task.execute("http://www.posh24.se/kandisar").get();
 
-            Log.i("Contents of URL",  result);
+            String[] splitResult = result.split("<div class=\"listedArticles\">");
+
+            Pattern p = Pattern.compile("img src=\"(.*?)\"");
+
+            Matcher m = p.matcher(splitResult[0]);
+
+            while (m.find()){
+                celebURLs.add(m.group(1));
+            }
+
+            p = Pattern.compile("alt=\"(.*?)\"");
+
+            m = p.matcher(splitResult[0]);
+
+            while (m.find()) {
+                celebNames.add(m.group(1));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
