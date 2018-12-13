@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 while (data != -1) {
                     char current = (char) data;
                     result += current;
-                    data = reader.read(); 
+                    data = reader.read();
                 }
 
             } catch (Exception e) {
@@ -51,5 +52,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DownloadTask task = new DownloadTask();
+        String result = null;
+
+        try {
+
+            result = task.execute("http://www.posh24.se/kandisar").get();
+
+            Log.i("Contents of URL",  result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
